@@ -3,6 +3,7 @@ import DataTable from "./DataTable";
 import Nav from "./Nav";
 import API from "../utils/API";
 import "../styles/DataArea.css";
+import UserContext from "../utils/UserContext"
 
 export default function DataArea() {
 
@@ -31,33 +32,27 @@ export default function DataArea() {
   }, [])
 
 
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     users: [{}],
-  //     order: "descend",
-  //     filteredUsers: [{}],
-  //     headings: [
-  //       { name: "Image", width: "10%" },
-  //       { name: "Name", width: "10%" },
-  //       { name: "Phone", width: "20%" },
-  //       { name: "Email", width: "20%" },
-  //       { name: "DOB", width: "10%" }
-  //     ],
 
-  let handleSort = heading => {
+  const handleSort = heading => {
 
     if (state.order === "descend") {
       setState({
-        order: "ascend"
+        order: "ascend",
+        users: state.users,
+        filteredUsers: state.filteredUsers,
+        headings: state.headings
       })
     } else {
       setState({
-        order: "descend"
+        order: "descend",
+        users: state.users,
+        filteredUsers: state.filteredUsers,
+        headings: state.headings
       })
     }
 
     const compareFnc = (a, b) => {
+      console.log("compareFnc")
       if (state.order === "ascend") {
         // account for missing values
         if (a[heading] === undefined) {
@@ -69,7 +64,7 @@ export default function DataArea() {
         else if (heading === "name") {
           return a[heading].first.localeCompare(b[heading].first);
         } else {
-          return a[heading] - b[heading];
+          return a[heading] - b[heading]; 
         }
       } else {
         // account for missing values
@@ -87,11 +82,16 @@ export default function DataArea() {
       }
 
     }
-    const sortedUsers = this.state.filteredUsers.sort(compareFnc);
-    setState({ filteredUsers: sortedUsers });
+    const sortedUsers = state.filteredUsers.sort(compareFnc);
+    setState({
+      filteredUsers: sortedUsers,
+      order: state.order,
+      users: state.users,
+      headings: state.headings
+    });
   }
 
-  let handleSearchChange = event => {
+  const handleSearchChange = event => {
     console.log(event.target.value);
     const filter = event.target.value;
     const filteredList = state.users.filter(item => {
@@ -101,28 +101,28 @@ export default function DataArea() {
         .toLowerCase();
       return values.indexOf(filter.toLowerCase()) !== -1;
     });
-    setState({ 
+    
+    setState({
       filteredUsers: filteredList,// Set the filtered Users
       // Ensure that the state remains the same for other variables:
       headings: state.headings,
       users: state.users,
       order: state.order
     });
+    console.log(state.filteredUsers)
   }
 
 
 
 
   return (
-    <>
+    <UserContext.Provider value={state}>
       <Nav handleSearchChange={handleSearchChange} />
       <div className="data-area">
         <DataTable
-          headings={state.headings}
-          users={state.filteredUsers}
           handleSort={handleSort}
         />
       </div>
-    </>
+    </UserContext.Provider>
   )
 }
