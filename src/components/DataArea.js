@@ -109,7 +109,31 @@ export default function DataArea() {
       users: state.users,
       order: state.order
     });
-    console.log(state.filteredUsers)
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    let dobStart = document.getElementById("dobStart").value.split('-').join("");
+    let dobEnd = document.getElementById("dobEnd").value.split('-').join("");;
+    console.log(dobStart)
+    
+    if(dobStart && dobEnd) { // Make sure the user has given input for date of birth range
+      const filteredList = state.users.filter(item => {
+        let dob = item.dob.date.split("T")
+        dob = dob[0].split("-").join("")
+        
+        return dob > dobStart && dob < dobEnd;
+      })
+      
+      setState({
+        filteredUsers: filteredList,// Set the filtered Users
+        // Ensure that the state remains the same for other variables:
+        headings: state.headings,
+        users: state.users,
+        order: state.order
+      });
+    }
   }
 
 
@@ -117,7 +141,7 @@ export default function DataArea() {
 
   return (
     <UserContext.Provider value={state}>
-      <Nav handleSearchChange={handleSearchChange} />
+      <Nav handleSearchChange={handleSearchChange} handleSubmit={handleSubmit}/>
       <div className="data-area">
         <DataTable
           handleSort={handleSort}

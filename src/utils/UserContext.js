@@ -3,7 +3,7 @@ import React from "react";
 const UserContext = React.createContext({
     headings: [{}],
     users: [{}],
-    filteredUsers: [{}]
+    filteredUsers: [{}],
 })
 
 export default UserContext;
