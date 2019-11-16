@@ -116,7 +116,6 @@ export default function DataArea() {
 
     let dobStart = document.getElementById("dobStart").value.split('-').join("");
     let dobEnd = document.getElementById("dobEnd").value.split('-').join("");;
-    console.log(dobStart)
     
     if(dobStart && dobEnd) { // Make sure the user has given input for date of birth range
       const filteredList = state.users.filter(item => {
@@ -125,7 +124,7 @@ export default function DataArea() {
         
         return dob > dobStart && dob < dobEnd;
       })
-      
+
       setState({
         filteredUsers: filteredList,// Set the filtered Users
         // Ensure that the state remains the same for other variables:
